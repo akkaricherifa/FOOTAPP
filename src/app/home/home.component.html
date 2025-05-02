@@ -1,0 +1,175 @@
+<!-- home.component.html -->
+<div class="football-app">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-logo">
+          <img src="assets/images/logo.png" alt="Football Manager Logo">
+          <span>Football Teams Manager</span>
+        </div>
+        <div class="navbar-links">
+          <a href="#" class="active">Accueil</a>
+          <a href="#">Compétitions</a>
+          <a href="#">Classements</a>
+          <a href="#">Actualités</a>
+          <a href="#">À propos</a>
+        </div>
+        <div class="navbar-search">
+          <input type="text" placeholder="Rechercher une équipe...">
+          <button><i class="fa fa-search"></i></button>
+        </div>
+      </div>
+    </nav>
+  
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Gestion d'Équipes de Football</h1>
+        <p>Explorez les meilleures équipes du monde et leurs joueurs</p>
+      </div>
+    </section>
+  
+    <!-- Teams Section -->
+    <section class="teams-section">
+      <div class="section-header">
+        <h2>Équipes Populaires</h2>
+        <p>Cliquez sur une équipe pour voir tous les détails</p>
+      </div>
+      
+      <div class="teams-grid">
+        <!-- Team 1 -->
+        <a class="team-card" (click)="goToTeam(1)">
+          <div class="team-logo">
+            <img src="assets/images/teams/barcelona.png" alt="FC Barcelona">
+          </div>
+          <div class="team-info">
+            <h3>FC Barcelona</h3>
+            <p>Liga Santander, Espagne</p>
+            <span class="team-founded">Fondé en 1899</span>
+          </div>
+        </a>
+        
+        <!-- Team 2 -->
+        <a class="team-card" (click)="goToTeam(2)">
+          <div class="team-logo">
+            <img src="assets/images/teams/real-madrid.png" alt="Real Madrid">
+          </div>
+          <div class="team-info">
+            <h3>Real Madrid</h3>
+            <p>Liga Santander, Espagne</p>
+            <span class="team-founded">Fondé en 1902</span>
+          </div>
+        </a>
+        
+        <!-- Team 3 -->
+        <a class="team-card" (click)="goToTeam(3)">
+          <div class="team-logo">
+            <img src="assets/images/teams/bayern.png" alt="Bayern Munich">
+          </div>
+          <div class="team-info">
+            <h3>Bayern Munich</h3>
+            <p>Bundesliga, Allemagne</p>
+            <span class="team-founded">Fondé en 1900</span>
+          </div>
+        </a>
+        
+        <!-- Team 4 -->
+        <a class="team-card" (click)="goToTeam(4)">
+          <div class="team-logo">
+            <img src="assets/images/teams/manchester-united.png" alt="Manchester United">
+          </div>
+          <div class="team-info">
+            <h3>Manchester United</h3>
+            <p>Premier League, Angleterre</p>
+            <span class="team-founded">Fondé en 1878</span>
+          </div>
+        </a>
+        
+        <!-- Team 5 -->
+        <a class="team-card" (click)="goToTeam(5)">
+          <div class="team-logo">
+            <img src="assets/images/teams/manchester-city.png" alt="Manchester City">
+          </div>
+          <div class="team-info">
+            <h3>Manchester City</h3>
+            <p>Premier League, Angleterre</p>
+            <span class="team-founded">Fondé en 1880</span>
+          </div>
+        </a>
+        
+        <!-- Team 6 -->
+        <a class="team-card" (click)="goToTeam(6)">
+          <div class="team-logo">
+            <img src="assets/images/teams/psg.png" alt="Paris Saint-Germain">
+          </div>
+          <div class="team-info">
+            <h3>Paris Saint-Germain</h3>
+            <p>Ligue 1, France</p>
+            <span class="team-founded">Fondé en 1970</span>
+          </div>
+        </a>
+        
+        <!-- Team 7 -->
+        <a class="team-card" (click)="goToTeam(7)">
+          <div class="team-logo">
+            <img src="assets/images/teams/liverpool.png" alt="Liverpool FC">
+          </div>
+          <div class="team-info">
+            <h3>Liverpool FC</h3>
+            <p>Premier League, Angleterre</p>
+            <span class="team-founded">Fondé en 1892</span>
+          </div>
+        </a>
+        
+        <!-- Team 8 -->
+        <a class="team-card" (click)="goToTeam(8)">
+          <div class="team-logo">
+            <img src="assets/images/teams/juventus.png" alt="Juventus">
+          </div>
+          <div class="team-info">
+            <h3>Juventus</h3>
+            <p>Serie A, Italie</p>
+            <span class="team-founded">Fondé en 1897</span>
+          </div>
+        </a>
+      </div>
+    </section>
+  
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="assets/images/logo.png" alt="Football Manager Logo">
+          <span>Football Teams Manager</span>
+        </div>
+        <div class="footer-links">
+          <div class="footer-column">
+            <h4>Navigation</h4>
+            <a href="#">Accueil</a>
+            <a href="#">Équipes</a>
+            <a href="#">Joueurs</a>
+            <a href="#">Statistiques</a>
+          </div>
+          <div class="footer-column">
+            <h4>Informations</h4>
+            <a href="#">À propos</a>
+            <a href="#">Contact</a>
+            <a href="#">Mentions légales</a>
+            <a href="#">Politique de confidentialité</a>
+          </div>
+          <div class="footer-column">
+            <h4>Suivez-nous</h4>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Football Teams Manager. Tous droits réservés.</p>
+      </div>
+    </footer>
+  </div>
