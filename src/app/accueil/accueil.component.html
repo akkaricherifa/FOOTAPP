@@ -1,0 +1,74 @@
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <img src="assets/images/logo1.png" alt="Football Manager Logo" class="logo">
+        <span class="brand-name">Football Manager</span>
+      </div>
+      <div class="navbar-menu">
+        <ul class="nav-links">
+          <li><a href="#" class="active">Accueil</a></li>
+          <li><a href="#">Équipes</a></li>
+          <li><a href="#">Joueurs</a></li>
+          <li><a href="#">Classements</a></li>
+          <li><a href="#">À propos</a></li>
+        </ul>
+      </div>
+      <div class="navbar-search">
+        <input type="text" placeholder="Rechercher une équipe..." class="search-input" [(ngModel)]="searchQuery" (input)="searchTeams()">
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Explorez les Meilleures Équipes de Football</h1>
+      <p>Découvrez les statistiques, les joueurs et l'histoire des équipes les plus célèbres du monde</p>
+    </div>
+  </section>
+  
+  <!-- Teams Grid -->
+  <section class="teams-section">
+    <div class="container">
+      <h2 class="section-title">Équipes Populaires</h2>
+  
+      <div class="teams-grid">
+        <!-- Team Card -->
+        <div *ngFor="let team of filteredTeams" class="team-card" [routerLink]="['/team', team.id]">
+          <div class="team-logo">
+            <img [src]="team.logo" [alt]="team.name">
+          </div>
+          <div class="team-info">
+            <h3>{{ team.name }}</h3>
+            <p>{{ team.country }}</p>
+            <span class="trophies-badge">{{ team.trophies?.[0]?.count }} {{ team.trophies?.[0]?.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <img src="assets/images/logo1.png" alt="Football Manager Logo" class="logo">
+          <span>Football Manager</span>
+        </div>
+        <div class="footer-links">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="#">Accueil</a></li>
+            <li><a href="#">Équipes</a></li>
+            <li><a href="#">Joueurs</a></li>
+            <li><a href="#">Classements</a></li>
+            <li><a href="#">À propos</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
