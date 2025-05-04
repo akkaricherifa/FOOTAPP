@@ -1,4 +1,5 @@
 <!-- Navbar -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
@@ -43,7 +44,7 @@
           <div class="team-info">
             <h3>{{ team.name }}</h3>
             <p>{{ team.country }}</p>
-            <span class="trophies-badge">{{ team.trophies?.[0]?.count }} {{ team.trophies?.[0]?.name }}</span>
+            <span class="trophies-badge"> 🏆{{ team.trophies?.[0]?.count }} {{ team.trophies?.[0]?.name }}  </span>
           </div>
         </div>
       </div>
@@ -54,10 +55,13 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
+        <!-- Logo et Texte -->
         <div class="footer-logo">
           <img src="assets/images/logo1.png" alt="Football Manager Logo" class="logo">
           <span>Football Manager</span>
         </div>
+        
+        <!-- Navigation -->
         <div class="footer-links">
           <h4>Navigation</h4>
           <ul>
@@ -68,7 +72,25 @@
             <li><a href="#">À propos</a></li>
           </ul>
         </div>
+        
+        <!-- Réseaux sociaux -->
+        <div class="footer-social">
+          <h4>Suivez-nous</h4>
+          <ul>
+            <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+            <li><a href="#"><i class="fab fa-linkedin-in"></i> LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Copyright et Contact -->
+      <div class="footer-bottom">
+        <p>&copy; 2025 Football Manager. Tous droits réservés.</p>
+        <p>Contactez-nous: <a href="mailto:contact@footballmanager.com">contact.footballmanager.com</a></p>
       </div>
     </div>
   </footer>
+  
   

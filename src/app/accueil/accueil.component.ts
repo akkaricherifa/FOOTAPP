@@ -15,6 +15,16 @@ export class AccueilComponent implements OnInit {
   teams: Team[] = [
     {
       id: 1,
+      name: 'Etoile Sportive du Sahel',
+      country: 'Tunisie',
+      logo: 'assets/images/teams/etoile.png',
+      trophies: [
+        { name: 'LDC', count: 10 },
+        { name: 'Liga', count: 0 }
+      ]
+    },
+    {
+      id: 1,
       name: 'Real Madrid',
       country: 'Espagne',
       logo: 'assets/images/teams/real.png',

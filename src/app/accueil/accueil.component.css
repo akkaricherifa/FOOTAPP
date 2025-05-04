@@ -95,28 +95,41 @@
   .navbar-search {
     display: flex;
     align-items: center;
+    border: 2px solid #000; /* Bordure noire */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 5px; /* Espacement interne */
+    width: 300px; /* Largeur fixe (ajustez selon votre besoin) */
   }
   
   .search-input {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px 0 0 4px;
-    outline: none;
+    border: none; /* Retire la bordure par défaut de l'input */
+    padding: 8px 12px; /* Espacement interne de l'input */
+    flex-grow: 1; /* Permet à l'input de s'étendre */
+    outline: none; /* Retire l'effet de focus par défaut */
   }
   
   .search-btn {
-    background-color: var(--accent-color);
-    color: var(--light-text);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: var(--transition);
+    background-color: transparent; /* Bouton sans fond */
+    border: none; /* Retire la bordure du bouton */
+    color: #000; /* Couleur du texte (icône) */
+    padding: 8px 12px; /* Espacement interne */
+    cursor: pointer; /* Curseur de souris en forme de main */
   }
   
-  .search-btn:hover {
-    background-color: #e65100;
+  .search-btn i {
+    font-size: 1.2rem; /* Taille de l'icône */
   }
+  
+  .search-input:focus {
+    outline: none; /* Retire le contour de focus par défaut */
+  }
+  
+  .navbar-search:hover {
+    border-color: #333; /* Bordure légèrement plus foncée au survol */
+  }
+  
+  
+ 
   
   /* Hero Section */
   .hero {
@@ -225,50 +238,101 @@
   }
   
   /* Footer */
-  .footer {
-    background-color: var(--dark-bg);
-    color: var(--light-text);
-    padding: 3rem 0 1rem;
+/* Global Footer Styles */
+.footer {
+    background-color: #5c5656;
+    color: #fff;
+    padding: 40px 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
   
   .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
   
   .footer-logo {
+    flex: 1;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
   
-  .footer-logo .logo {
-    height: 50px;
-    margin-bottom: 1rem;
+  .footer-logo img {
+    max-width: 100px;
+    margin-right: 10px;
+  }
+  
+  .footer-logo span {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .footer-links, .footer-social {
+    flex: 1;
+    min-width: 200px;
   }
   
   .footer-links h4, .footer-social h4 {
-    margin-bottom: 1rem;
     font-size: 1.2rem;
+    margin-bottom: 10px;
   }
   
-  .footer-links ul {
+  .footer-links ul, .footer-social ul {
     list-style: none;
+    padding: 0;
   }
   
-  .footer-links li {
-    margin-bottom: 0.5rem;
+  .footer-links li, .footer-social li {
+    margin-bottom: 10px;
   }
   
-  .footer-links a {
-    transition: var(--transition);
+  .footer-links a, .footer-social a {
+    color: #fff;
+    text-decoration: none;
   }
   
-  .footer-links a:hover {
-    color: var(--accent-color);
+  .footer-links a:hover, .footer-social a:hover {
+    text-decoration: underline;
   }
+  
+  .footer-social ul {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .footer-social i {
+    margin-right: 8px;
+  }
+  
+  /* Footer Bottom */
+  .footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+  }
+  
+  .footer-bottom p {
+    font-size: 0.9rem;
+    margin: 5px 0;
+  }
+  
+  .footer-bottom a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-bottom a:hover {
+    text-decoration: underline;
+  }
+  
   
   .social-icons {
     display: flex;
