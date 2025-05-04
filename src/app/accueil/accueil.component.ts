@@ -3,6 +3,7 @@ import { Team } from '../models/team';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TeamServiceService } from '../team-service.service';
 
 @Component({
   selector: 'app-accueil',
@@ -12,123 +13,44 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './accueil.component.css'
 })
 export class AccueilComponent implements OnInit {
-  teams: Team[] = [
-    {
-      id: 1,
-      name: 'Etoile Sportive du Sahel',
-      country: 'Tunisie',
-      logo: 'assets/images/teams/etoile.png',
-      trophies: [
-        { name: 'LDC', count: 10 },
-        { name: 'Liga', count: 0 }
-      ]
-    },
-    {
-      id: 1,
-      name: 'Real Madrid',
-      country: 'Espagne',
-      logo: 'assets/images/teams/real.png',
-      trophies: [
-        { name: 'LDC', count: 14 },
-        { name: 'Liga', count: 35 }
-      ]
-    },
-    {
-      id: 2,
-      name: 'FC Barcelona',
-      country: 'Espagne',
-      logo: 'assets/images/teams/barcelone.png',
-      trophies: [
-        { name: 'LDC', count: 5 },
-        { name: 'Liga', count: 26 }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Manchester United',
-      country: 'Angleterre',
-      logo: 'assets/images/teams/mu.png',
-      trophies: [
-        { name: 'LDC', count: 3 },
-        { name: 'Premier League', count: 20 }
-      ]
-    },
-    {
-      id: 4,
-      name: 'Bayern Munich',
-      country: 'Allemagne',
-      logo: 'assets/images/teams/bayern.png',
-      trophies: [
-        { name: 'LDC', count: 6 },
-        { name: 'Bundesliga', count: 32 }
-      ]
-    },
-    {
-      id: 5,
-      name: 'Liverpool FC',
-      country: 'Angleterre',
-      logo: 'assets/images/teams/liverpool.png',
-      trophies: [
-        { name: 'LDC', count: 6 },
-        { name: 'Premier League', count: 19 }
-      ]
-    },
-    {
-      id: 6,
-      name: 'Paris Saint-Germain',
-      country: 'France',
-      logo: 'assets/images/teams/psg.png',
-      trophies: [
-        { name: 'LDC', count: 0 },
-        { name: 'Ligue 1', count: 11 }
-      ]
-    },
-    {
-      id: 7,
-      name: 'Manchester City',
-      country: 'Angleterre',
-      logo: 'assets/images/teams/manchester.png',
-      trophies: [
-        { name: 'LDC', count: 1 },
-        { name: 'Premier League', count: 9 }
-      ]
-    },
-    {
-      id: 8,
-      name: 'Juventus FC',
-      country: 'Italie',
-      logo: 'assets/images/teams/juv.png',
-      trophies: [
-        { name: 'LDC', count: 2 },
-        { name: 'Serie A', count: 36 }
-      ]
-    }
-  ];
+  teams: Team[] = []; // Pour stocker les équipes récupérées
+  filteredTeams: Team[] = []; // Pour stocker les équipes filtrées en fonction de la recherche
+  searchQuery: string = ''; // Variable pour la recherche
 
-  filteredTeams: Team[] = [];
-  searchQuery: string = '';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, 
+    private teamService: TeamServiceService
+  ) { }
 
   ngOnInit(): void {
-    this.filteredTeams = [...this.teams];
+    this.getTeams(); // Appeler la méthode pour récupérer les équipes au chargement du composant
+  }
+
+  getTeams(): void {
+    this.teamService.getTeams().subscribe(
+      (teams) => {
+        this.teams = teams; // Assigner les équipes récupérées à la variable
+        this.filteredTeams = teams; // Initialiser filteredTeams avec toutes les équipes
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des équipes:', error);
+      }
+    );
   }
 
   navigateToTeamDetails(teamId: string): void {
     this.router.navigate(['/team', teamId]);
   }
 
-  searchTeams(): void {
-    if (!this.searchQuery.trim()) {
-      this.filteredTeams = [...this.teams];
-      return;
+ searchTeams(): void {
+    if (this.searchQuery) {
+      this.filteredTeams = this.teams.filter(team =>
+        team.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        team.country.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredTeams = this.teams;
     }
-
-    const query = this.searchQuery.toLowerCase();
-    this.filteredTeams = this.teams.filter(team => 
-      team.name.toLowerCase().includes(query) || 
-      team.country.toLowerCase().includes(query)
-    );
   }
 }
 

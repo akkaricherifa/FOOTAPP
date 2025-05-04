@@ -1,10 +1,18 @@
-import { TeamStats } from "./team-stats";
+import { Coach } from "./coach";
+import { Player } from "./player";
 import { Trophy } from "./trophy";
 
 export interface Team {
-  id: number;
+  id: string;
   name: string;
   country: string;
+  league: string;
   logo: string;
-  trophies?: Trophy[];
+  stadium: string;
+  foundedYear: number;
+  stadiumCapacity: number;
+  description: string;
+  players: Player[];
+  trophies: Trophy[];
+  coach: Coach;
 }

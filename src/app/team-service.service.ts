@@ -11,59 +11,50 @@ import { Match } from './models/match';
 })
 
 export class TeamServiceService {
+  
+  private apiUrl = 'http://localhost:3000/api/teams';
 
-  private apiUrl = 'assets/data'; // Pour le développement avec des données mockées
-  // En production, utilisez votre API réelle, par exemple:
-  // private apiUrl = 'https://api.example.com/football';
+
 
   constructor(private http: HttpClient) { }
 
   // Récupérer toutes les équipes
   getTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.apiUrl}/teams.json`).pipe(
-      catchError(this.handleError<Team[]>('getTeams', []))
-    );
+    return this.http.get<Team[]>(`${this.apiUrl}`)
+      .pipe(
+        catchError(this.handleError<Team[]>('getTeams', []))
+      );
   }
 
   // Récupérer une équipe par son ID
-  getTeamById(id: number): Observable<Team> {
-    return this.http.get<Team[]>(`${this.apiUrl}/teams.json`).pipe(
-      map(teams => teams.find(team => team.id === id) as Team),
-      catchError(this.handleError<Team>(`getTeamById id=${id}`))
-    );
+  getTeamById(teamId: string): Observable<Team> {
+    return this.http.get<Team>(`${this.apiUrl}/${teamId}`)
+      .pipe(
+        catchError(this.handleError<Team>('getTeamById'))
+      );
+  }
+
+  
+
+ //  Ajouter une nouvelle équipe
+  addTeam(teamData: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, teamData);
+  }
+
+   // Mettre à jour une équipe
+   updateTeam(teamId: string, teamData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${teamId}`, teamData);
+  }
+
+  // Supprimer une équipe
+  deleteTeam(teamId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${teamId}`);
   }
 
   // Récupérer l'entraîneur d'une équipe
-  getTeamCoach(teamId: number): Observable<Coach> {
-    return this.http.get<Coach[]>(`${this.apiUrl}/coaches.json`).pipe(
-      map(coaches => coaches.find(coach => coach.teamId === teamId) as Coach),
-      catchError(this.handleError<Coach>(`getTeamCoach teamId=${teamId}`))
-    );
-  }
+  
+  
 
-  // Récupérer les joueurs d'une équipe
-  getTeamPlayers(teamId: number): Observable<Player[]> {
-    return this.http.get<Player[]>(`${this.apiUrl}/players.json`).pipe(
-      map(players => players.filter(player => player.teamId === teamId)),
-      catchError(this.handleError<Player[]>(`getTeamPlayers teamId=${teamId}`, []))
-    );
-  }
-
-  // Récupérer les matchs d'une équipe
-  getTeamMatches(teamId: number): Observable<Match[]> {
-    return this.http.get<Match[]>(`${this.apiUrl}/matches.json`).pipe(
-      map(matches => matches.filter(match => 
-        match.homeTeamId === teamId || match.awayTeamId === teamId
-      )),
-      catchError(this.handleError<Match[]>(`getTeamMatches teamId=${teamId}`, []))
-    );
-  }
-
-  /**
-   * Gestion des erreurs HTTP
-   * @param operation - nom de l'opération qui a échoué
-   * @param result - valeur optionnelle à retourner comme observable de résultat
-   */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(`${operation} a échoué: ${error.message}`);

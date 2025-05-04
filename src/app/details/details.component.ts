@@ -5,6 +5,8 @@ import { Coach } from '../models/coach';
 import { Player } from '../models/player';
 import { Match } from '../models/match';
 import { TeamServiceService } from '../team-service.service';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-details',
@@ -14,88 +16,60 @@ import { TeamServiceService } from '../team-service.service';
   styleUrl: './details.component.css'
 })
 export class DetailsComponent implements OnInit {
-  teamId: number = 0;
-  team: Team | null = null;
-  coach: Coach | null = null;
-  players: Player[] = [];
-  keyPlayers: Player[] = [];
-  recentMatches: Match[] = [];
-  activeTab: string = 'aperçu';
-  loading: boolean = true;
-  error: string | null = null;
+  teamId!: string;
+  team: Team | undefined;
+  errorMessage: string = ''; // Pour afficher les erreurs éventuelles
 
   constructor(
-    private route: ActivatedRoute,
-    private teamService: TeamServiceService
-  ) { }
+    private route: ActivatedRoute, // Pour récupérer l'ID de l'URL
+    private teamService: TeamServiceService, // Le service pour interagir avec le backend
+    private location: Location // Pour gérer la navigation
+  ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.teamId = +params['id']; // Convertir l'ID en nombre
-      this.loadTeamDetails();
+    // Récupérer l'ID de l'équipe à partir de l'URL
+    this.route.paramMap.subscribe(params => {
+      this.teamId = params.get('id')!;
+      this.getTeamDetails();
     });
   }
 
-  loadTeamDetails(): void {
-    this.loading = true;
-    
-    // Charger les informations de l'équipe
+  // Méthode pour obtenir les détails d'une équipe
+  getTeamDetails(): void {
     this.teamService.getTeamById(this.teamId).subscribe({
-      next: (team) => {
-        this.team = team;
-        this.loading = false;
+      next: (data) => {
+        this.team = data; // Assigner les données de l'équipe
       },
       error: (err) => {
-        this.error = 'Erreur lors du chargement des détails de l\'équipe.';
-        this.loading = false;
-        console.error('Erreur lors du chargement des détails de l\'équipe:', err);
-      }
-    });
-
-    // Charger l'entraîneur
-    this.teamService.getTeamCoach(this.teamId).subscribe({
-      next: (coach) => {
-        this.coach = coach;
+        this.errorMessage = 'Erreur lors du chargement des détails de l\'équipe';
+        console.error('Erreur:', err);
       },
-      error: (err) => {
-        console.error('Erreur lors du chargement de l\'entraîneur:', err);
-      }
-    });
-
-    // Charger les joueurs
-    this.teamService.getTeamPlayers(this.teamId).subscribe({
-      next: (players) => {
-        this.players = players;
-        // Filtrer les joueurs clés (par exemple, les joueurs avec les meilleures statistiques)
-        this.keyPlayers = this.players
-          .sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists))
-          .slice(0, 4); // Prendre les 4 meilleurs joueurs
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des joueurs:', err);
-      }
-    });
-
-    // Charger les matchs récents
-    this.teamService.getTeamMatches(this.teamId).subscribe({
-      next: (matches) => {
-        this.recentMatches = matches
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .slice(0, 5); // Prendre les 5 derniers matchs
-      },
-      error: (err) => {
-        console.error('Erreur lors du chargement des matchs:', err);
-      }
     });
   }
 
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
+  
+  // Méthode pour supprimer une équipe
+  deleteTeam(): void {
+    if (confirm('Voulez-vous vraiment supprimer cette équipe ?')) {
+      this.teamService.deleteTeam(this.teamId).subscribe({
+        next: () => {
+          alert('L\'équipe a été supprimée');
+          this.location.back(); // Revenir à la page précédente
+        },
+        error: (err) => {
+          this.errorMessage = 'Erreur lors de la suppression de l\'équipe';
+          console.error('Erreur:', err);
+        },
+      });
+    }
   }
 
-  isTabActive(tab: string): boolean {
-    return this.activeTab === tab;
+  // Méthode pour revenir à la page précédente
+  goBack(): void {
+    this.location.back();
   }
 }
 
+
+    
 

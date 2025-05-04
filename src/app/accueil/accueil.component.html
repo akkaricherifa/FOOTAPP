@@ -36,15 +36,15 @@
       <h2 class="section-title">Équipes Populaires</h2>
   
       <div class="teams-grid">
-        <!-- Team Card -->
-        <div *ngFor="let team of filteredTeams" class="team-card" [routerLink]="['/team', team.id]">
+        <!-- Boucle sur les équipes filtrées -->
+        <div *ngFor="let team of filteredTeams" class="team-card">
           <div class="team-logo">
             <img [src]="team.logo" [alt]="team.name">
           </div>
           <div class="team-info">
             <h3>{{ team.name }}</h3>
             <p>{{ team.country }}</p>
-            <span class="trophies-badge"> 🏆{{ team.trophies?.[0]?.count }} {{ team.trophies?.[0]?.name }}  </span>
+            <span class="trophies-badge"> 🏆 {{ team.trophies?.[0]?.name }} </span>
           </div>
         </div>
       </div>
