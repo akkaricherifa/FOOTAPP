@@ -37,7 +37,8 @@
   
       <div class="teams-grid">
         <!-- Boucle sur les équipes filtrées -->
-        <div *ngFor="let team of filteredTeams" class="team-card">
+        <div *ngFor="let team of filteredTeams" class="team-card" [routerLink]="['/team', team._id]">
+
           <div class="team-logo">
             <img [src]="team.logo" [alt]="team.name">
           </div>
@@ -48,6 +49,7 @@
           </div>
         </div>
       </div>
+      
     </div>
   </section>
   

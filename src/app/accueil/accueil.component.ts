@@ -24,6 +24,7 @@ export class AccueilComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTeams(); // Appeler la méthode pour récupérer les équipes au chargement du composant
+    
   }
 
   getTeams(): void {
