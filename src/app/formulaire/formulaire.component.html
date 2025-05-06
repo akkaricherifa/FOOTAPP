@@ -7,7 +7,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-
 </head>
 <body>
   <div class="team-header text-center">
@@ -22,6 +21,13 @@
   </div>
 
   <div class="container main-container py-4">
+    <div *ngIf="errorMessage" class="alert alert-danger animate__animated animate__fadeIn">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success animate__animated animate__fadeIn">
+      {{ successMessage }}
+    </div>
+
     <div class="card animate__animated animate__fadeIn animate__delay-2s">
       <div class="card-body p-0">
         <ul class="nav nav-tabs" id="teamFormTabs" role="tablist">
@@ -47,79 +53,96 @@
           </li>
         </ul>
 
-        <form class="team-form" (ngSubmit)="onSubmit()">
+        <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="team-form">
           <div class="tab-content p-4" id="teamFormTabContent">
             <!-- Tab 1: Informations de base -->
             <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
               <div class="form-section fade-in">
                 <h3 class="section-title">
+                    <div *ngIf="currentTab === 'general-tab'">
                   <i class="fas fa-shield-alt"></i> Informations de l'Équipe
+                </div>
                 </h3>
                 
                 <div class="row g-4">
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="teamName" class="form-label required-field">Nom de l'équipe</label>
-                      <input type="text" class="form-control" id="teamName" name="name" [(ngModel)]="team.name" required>
+                      <input type="text" class="form-control" id="teamName" formControlName="name" [class.is-invalid]="teamForm.get('name')?.invalid && (teamForm.get('name')?.dirty || teamForm.get('name')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('name')?.invalid && (teamForm.get('name')?.dirty || teamForm.get('name')?.touched || submitted)" class="invalid-feedback">
+                        <div *ngIf="teamForm.get('name')?.errors?.['required']">Le nom de l'équipe est obligatoire</div>
+                        <div *ngIf="teamForm.get('name')?.errors?.['minlength']">Minimum 3 caractères</div>
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="country" class="form-label required-field">Pays</label>
-                      <select class="form-select" id="country" name="country" [(ngModel)]="team.country" required>
+                      <select class="form-select" id="country" formControlName="country" [class.is-invalid]="teamForm.get('country')?.invalid && (teamForm.get('country')?.dirty || teamForm.get('country')?.touched || submitted)">
                         <option value="" disabled selected>Sélectionner un pays</option>
-                        <option value="France">France</option>
-                        <option value="Espagne">Espagne</option>
-                        <option value="Angleterre">Angleterre</option>
-                        <option value="Allemagne">Allemagne</option>
-                        <option value="Italie">Italie</option>
-                        <option value="Portugal">Portugal</option>
-                        <option value="Brésil">Brésil</option>
-                        <option value="Argentine">Argentine</option>
-                        <option value="Pays-Bas">Pays-Bas</option>
-                        <option value="Belgique">Belgique</option>
-                        <!-- Ajoutez d'autres pays au besoin -->
+                        <option *ngFor="let country of countries" [value]="country">{{ country }}</option>
                       </select>
+                      <div *ngIf="teamForm.get('country')?.invalid && (teamForm.get('country')?.dirty || teamForm.get('country')?.touched || submitted)" class="invalid-feedback">
+                        Le pays est obligatoire
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="league" class="form-label required-field">Ligue</label>
-                      <input type="text" class="form-control" id="league" name="league" [(ngModel)]="team.league" required>
+                      <input type="text" class="form-control" id="league" formControlName="league" [class.is-invalid]="teamForm.get('league')?.invalid && (teamForm.get('league')?.dirty || teamForm.get('league')?.touched || submitted)">
                       <div class="help-text">Ex: Ligue 1, Premier League, La Liga, etc.</div>
+                      <div *ngIf="teamForm.get('league')?.invalid && (teamForm.get('league')?.dirty || teamForm.get('league')?.touched || submitted)" class="invalid-feedback">
+                        La ligue est obligatoire
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="foundedYear" class="form-label required-field">Année de fondation</label>
-                      <input type="number" class="form-control" id="foundedYear" name="foundedYear" [(ngModel)]="team.foundedYear" min="1850" max="2025" required>
+                      <input type="number" class="form-control" id="foundedYear" formControlName="foundedYear" [class.is-invalid]="teamForm.get('foundedYear')?.invalid && (teamForm.get('foundedYear')?.dirty || teamForm.get('foundedYear')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('foundedYear')?.invalid && (teamForm.get('foundedYear')?.dirty || teamForm.get('foundedYear')?.touched || submitted)" class="invalid-feedback">
+                        <div *ngIf="teamForm.get('foundedYear')?.errors?.['required']">L'année est obligatoire</div>
+                        <div *ngIf="teamForm.get('foundedYear')?.errors?.['min']">L'année doit être supérieure à 1850</div>
+                        <div *ngIf="teamForm.get('foundedYear')?.errors?.['max']">L'année ne peut pas être dans le futur</div>
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="stadium" class="form-label required-field">Nom du stade</label>
-                      <input type="text" class="form-control" id="stadium" name="stadium" [(ngModel)]="team.stadium" required>
+                      <input type="text" class="form-control" id="stadium" formControlName="stadium" [class.is-invalid]="teamForm.get('stadium')?.invalid && (teamForm.get('stadium')?.dirty || teamForm.get('stadium')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('stadium')?.invalid && (teamForm.get('stadium')?.dirty || teamForm.get('stadium')?.touched || submitted)" class="invalid-feedback">
+                        Le nom du stade est obligatoire
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="stadiumCapacity" class="form-label required-field">Capacité du stade</label>
-                      <input type="number" class="form-control" id="stadiumCapacity" name="stadiumCapacity" [(ngModel)]="team.stadiumCapacity" min="1000" required>
+                      <input type="number" class="form-control" id="stadiumCapacity" formControlName="stadiumCapacity" [class.is-invalid]="teamForm.get('stadiumCapacity')?.invalid && (teamForm.get('stadiumCapacity')?.dirty || teamForm.get('stadiumCapacity')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('stadiumCapacity')?.invalid && (teamForm.get('stadiumCapacity')?.dirty || teamForm.get('stadiumCapacity')?.touched || submitted)" class="invalid-feedback">
+                        <div *ngIf="teamForm.get('stadiumCapacity')?.errors?.['required']">La capacité est obligatoire</div>
+                        <div *ngIf="teamForm.get('stadiumCapacity')?.errors?.['min']">Minimum 1000 places</div>
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-12">
                     <div class="mb-3">
                       <label for="logo" class="form-label required-field">Logo de l'équipe (URL)</label>
-                      <input type="text" class="form-control" id="logo" name="logo" [(ngModel)]="team.logo" required>
+                      <input type="text" class="form-control" id="logo" formControlName="logo" [class.is-invalid]="teamForm.get('logo')?.invalid && (teamForm.get('logo')?.dirty || teamForm.get('logo')?.touched || submitted)">
                       <div class="mt-2">
-                        <img [src]="team.logo" class="logo-preview" *ngIf="team.logo" alt="Logo de l'équipe">
-                        <img src="/api/placeholder/100/100" class="logo-preview" *ngIf="!team.logo" alt="Logo placeholder">
+                        <img [src]="teamForm.get('logo')?.value" class="logo-preview" *ngIf="teamForm.get('logo')?.value" alt="Logo de l'équipe">
+                        <img src="/api/placeholder/100/100" class="logo-preview" *ngIf="!teamForm.get('logo')?.value" alt="Logo placeholder">
+                      </div>
+                      <div *ngIf="teamForm.get('logo')?.invalid && (teamForm.get('logo')?.dirty || teamForm.get('logo')?.touched || submitted)" class="invalid-feedback">
+                        L'URL du logo est obligatoire
                       </div>
                     </div>
                   </div>
@@ -127,7 +150,7 @@
                   <div class="col-md-12">
                     <div class="mb-3">
                       <label for="description" class="form-label">Description</label>
-                      <textarea class="form-control" id="description" name="description" [(ngModel)]="team.description" rows="4"></textarea>
+                      <textarea class="form-control" id="description" formControlName="description" rows="4"></textarea>
                       <div class="help-text">Histoire, valeurs et informations supplémentaires sur l'équipe</div>
                     </div>
                   </div>
@@ -148,12 +171,12 @@
                   <i class="fas fa-users"></i> Joueurs de l'Équipe
                 </h3>
                 
-                <div class="players-container">
-                  <div *ngFor="let player of team.players; let i = index" class="player-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
+                <div formArrayName="players">
+                  <div *ngFor="let player of players.controls; let i = index"  class="player-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                       <h5 class="mb-0">
                         Joueur #{{i+1}}
-                        <span class="badge badge-position" *ngIf="player.position">{{player.position}}</span>
+                        <span class="badge badge-position" *ngIf="player.get('position')?.value">{{player.get('position')?.value}}</span>
                       </h5>
                       <button type="button" class="btn-remove" (click)="removePlayer(i)">
                         <i class="fas fa-times"></i>
@@ -163,49 +186,71 @@
                     <div class="row g-3">
                       <div class="col-md-6">
                         <label class="form-label required-field">Prénom</label>
-                        <input type="text" class="form-control" [(ngModel)]="player.firstName" name="player-firstName-{{i}}" required>
+                        <input type="text" class="form-control" formControlName="firstName" [class.is-invalid]="player.get('firstName')?.invalid && (player.get('firstName')?.dirty || player.get('firstName')?.touched || submitted)">
+                        <div *ngIf="player.get('firstName')?.invalid && (player.get('firstName')?.dirty || player.get('firstName')?.touched || submitted)" class="invalid-feedback">
+                          Le prénom est obligatoire
+                        </div>
                       </div>
                       
                       <div class="col-md-6">
                         <label class="form-label required-field">Nom</label>
-                        <input type="text" class="form-control" [(ngModel)]="player.lastName" name="player-lastName-{{i}}" required>
+                        <input type="text" class="form-control" formControlName="lastName" [class.is-invalid]="player.get('lastName')?.invalid && (player.get('lastName')?.dirty || player.get('lastName')?.touched || submitted)">
+                        <div *ngIf="player.get('lastName')?.invalid && (player.get('lastName')?.dirty || player.get('lastName')?.touched || submitted)" class="invalid-feedback">
+                          Le nom est obligatoire
+                        </div>
                       </div>
                       
                       <div class="col-md-4">
                         <label class="form-label required-field">Âge</label>
-                        <input type="number" class="form-control" [(ngModel)]="player.age" name="player-age-{{i}}" min="16" max="50" required>
+                        <input type="number" class="form-control" formControlName="age" [class.is-invalid]="player.get('age')?.invalid && (player.get('age')?.dirty || player.get('age')?.touched || submitted)">
+                        <div *ngIf="player.get('age')?.invalid && (player.get('age')?.dirty || player.get('age')?.touched || submitted)" class="invalid-feedback">
+                          <div *ngIf="player.get('age')?.errors?.['required']">L'âge est obligatoire</div>
+                          <div *ngIf="player.get('age')?.errors?.['min']">Minimum 16 ans</div>
+                          <div *ngIf="player.get('age')?.errors?.['max']">Maximum 50 ans</div>
+                        </div>
                       </div>
                       
                       <div class="col-md-4">
                         <label class="form-label required-field">Numéro</label>
-                        <input type="number" class="form-control" [(ngModel)]="player.number" name="player-number-{{i}}" min="1" max="99" required>
+                        <input type="number" class="form-control" formControlName="number" [class.is-invalid]="player.get('number')?.invalid && (player.get('number')?.dirty || player.get('number')?.touched || submitted)">
+                        <div *ngIf="player.get('number')?.invalid && (player.get('number')?.dirty || player.get('number')?.touched || submitted)" class="invalid-feedback">
+                          <div *ngIf="player.get('number')?.errors?.['required']">Le numéro est obligatoire</div>
+                          <div *ngIf="player.get('number')?.errors?.['min']">Minimum 1</div>
+                          <div *ngIf="player.get('number')?.errors?.['max']">Maximum 99</div>
+                        </div>
                       </div>
                       
                       <div class="col-md-4">
                         <label class="form-label required-field">Position</label>
-                        <select class="form-select" [(ngModel)]="player.position" name="player-position-{{i}}" required>
+                        <select class="form-select" formControlName="position" [class.is-invalid]="player.get('position')?.invalid && (player.get('position')?.dirty || player.get('position')?.touched || submitted)">
                           <option value="" disabled selected>Sélectionner</option>
-                          <option value="Gardien">Gardien</option>
-                          <option value="Défenseur">Défenseur</option>
-                          <option value="Milieu">Milieu</option>
-                          <option value="Attaquant">Attaquant</option>
+                          <option *ngFor="let position of positions" [value]="position">{{position}}</option>
                         </select>
+                        <div *ngIf="player.get('position')?.invalid && (player.get('position')?.dirty || player.get('position')?.touched || submitted)" class="invalid-feedback">
+                          La position est obligatoire
+                        </div>
                       </div>
                       
                       <div class="col-md-6">
                         <label class="form-label required-field">Nationalité</label>
-                        <input type="text" class="form-control" [(ngModel)]="player.nationality" name="player-nationality-{{i}}" required>
+                        <input type="text" class="form-control" formControlName="nationality" [class.is-invalid]="player.get('nationality')?.invalid && (player.get('nationality')?.dirty || player.get('nationality')?.touched || submitted)">
+                        <div *ngIf="player.get('nationality')?.invalid && (player.get('nationality')?.dirty || player.get('nationality')?.touched || submitted)" class="invalid-feedback">
+                          La nationalité est obligatoire
+                        </div>
                       </div>
                       
                       <div class="col-md-6">
                         <label class="form-label required-field">Image (URL)</label>
-                        <input type="text" class="form-control" [(ngModel)]="player.image" name="player-image-{{i}}" required>
+                        <input type="text" class="form-control" formControlName="image" [class.is-invalid]="player.get('image')?.invalid && (player.get('image')?.dirty || player.get('image')?.touched || submitted)">
+                        <div *ngIf="player.get('image')?.invalid && (player.get('image')?.dirty || player.get('image')?.touched || submitted)" class="invalid-feedback">
+                          L'URL de l'image est obligatoire
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <div class="text-center mt-4" *ngIf="team.players.length === 0">
+                <div class="text-center mt-4" *ngIf="players.length === 0">
                   <p class="text-muted">Aucun joueur ajouté</p>
                 </div>
                 
@@ -233,8 +278,8 @@
                   <i class="fas fa-trophy"></i> Trophées Remportés
                 </h3>
                 
-                <div class="trophies-container">
-                  <div *ngFor="let trophy of team.trophies; let i = index" class="trophy-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
+                <div formArrayName="trophies">
+                  <div *ngFor="let trophy of trophies.controls; let i = index"  class="trophy-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                       <h5 class="mb-0">Trophée #{{i+1}}</h5>
                       <button type="button" class="btn-remove" (click)="removeTrophy(i)">
@@ -245,18 +290,26 @@
                     <div class="row g-3">
                       <div class="col-md-8">
                         <label class="form-label required-field">Nom du trophée</label>
-                        <input type="text" class="form-control" [(ngModel)]="trophy.name" name="trophy-name-{{i}}" required>
+                        <input type="text" class="form-control" formControlName="name" [class.is-invalid]="trophy.get('name')?.invalid && (trophy.get('name')?.dirty || trophy.get('name')?.touched || submitted)">
+                        <div *ngIf="trophy.get('name')?.invalid && (trophy.get('name')?.dirty || trophy.get('name')?.touched || submitted)" class="invalid-feedback">
+                          Le nom du trophée est obligatoire
+                        </div>
                       </div>
                       
                       <div class="col-md-4">
                         <label class="form-label required-field">Année</label>
-                        <input type="number" class="form-control" [(ngModel)]="trophy.year" name="trophy-year-{{i}}" min="1850" max="2025" required>
+                        <input type="number" class="form-control" formControlName="year" [class.is-invalid]="trophy.get('year')?.invalid && (trophy.get('year')?.dirty || trophy.get('year')?.touched || submitted)">
+                        <div *ngIf="trophy.get('year')?.invalid && (trophy.get('year')?.dirty || trophy.get('year')?.touched || submitted)" class="invalid-feedback">
+                          <div *ngIf="trophy.get('year')?.errors?.['required']">L'année est obligatoire</div>
+                          <div *ngIf="trophy.get('year')?.errors?.['min']">Minimum 1850</div>
+                          <div *ngIf="trophy.get('year')?.errors?.['max']">Maximum </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <div class="text-center mt-4" *ngIf="team.trophies.length === 0">
+                <div class="text-center mt-4" *ngIf="trophies.length === 0">
                   <p class="text-muted">Aucun trophée ajouté</p>
                 </div>
                 
@@ -284,18 +337,24 @@
                   <i class="fas fa-user-tie"></i> Entraîneur
                 </h3>
                 
-                <div class="row g-4">
+                <div class="row g-4" formGroupName="coach">
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="coachFirstName" class="form-label required-field">Prénom</label>
-                      <input type="text" class="form-control" id="coachFirstName" name="coachFirstName" [(ngModel)]="team.coach.firstName" required>
+                      <input type="text" class="form-control" id="coachFirstName" formControlName="firstName" [class.is-invalid]="teamForm.get('coach.firstName')?.invalid && (teamForm.get('coach.firstName')?.dirty || teamForm.get('coach.firstName')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('coach.firstName')?.invalid && (teamForm.get('coach.firstName')?.dirty || teamForm.get('coach.firstName')?.touched || submitted)" class="invalid-feedback">
+                        Le prénom de l'entraîneur est obligatoire
+                      </div>
                     </div>
                   </div>
                   
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="coachLastName" class="form-label required-field">Nom</label>
-                      <input type="text" class="form-control" id="coachLastName" name="coachLastName" [(ngModel)]="team.coach.lastName" required>
+                      <input type="text" class="form-control" id="coachLastName" formControlName="lastName" [class.is-invalid]="teamForm.get('coach.lastName')?.invalid && (teamForm.get('coach.lastName')?.dirty || teamForm.get('coach.lastName')?.touched || submitted)">
+                      <div *ngIf="teamForm.get('coach.lastName')?.invalid && (teamForm.get('coach.lastName')?.dirty || teamForm.get('coach.lastName')?.touched || submitted)" class="invalid-feedback">
+                        Le nom de l'entraîneur est obligatoire
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -304,7 +363,7 @@
                   <button type="button" class="btn btn-outline-secondary" (click)="previousTab('trophies-tab')">
                     <i class="fas fa-arrow-left me-2"></i> Précédent
                   </button>
-                  <button type="submit" class="btn form-submit-btn animate__animated animate__pulse animate__infinite">
+                  <button type="submit" class="btn form-submit-btn animate__animated animate__pulse animate__infinite" [disabled]="teamForm.invalid || players.length === 0">
                     <i class="fas fa-check-circle me-2"></i> Enregistrer l'équipe
                   </button>
                 </div>

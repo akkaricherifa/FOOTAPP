@@ -36,18 +36,16 @@ export class TeamServiceService {
   
 
  //  Ajouter une nouvelle équipe
- addTeam(teamData: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/post`, teamData)
-    .pipe(
-      catchError(this.handleError<any>('addTeam'))
-    );
+ addTeam(teamData: Team): Observable<Team> {
+  return this.http.post<Team>(`${this.apiUrl}/post`, teamData).pipe(
+    catchError(this.handleError<Team>('addTeam'))
+  );
 }
    // Mettre à jour une équipe
-   updateTeam(teamId: string, teamData: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/put/${teamId}`, teamData)
-      .pipe(
-        catchError(this.handleError<any>('updateTeam'))
-      );
+   updateTeam(id: string, teamData: Team): Observable<Team> {
+    return this.http.put<Team>(`${this.apiUrl}/put/${id}`, teamData).pipe(
+      catchError(this.handleError<Team>('updateTeam'))
+    );
   }
 
   // Supprimer une équipe
