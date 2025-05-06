@@ -1,0 +1,240 @@
+
+:root {
+  --primary: #1a76d2;
+  --secondary: #0d47a1;
+  --success: #4caf50;
+  --light-bg: #f8f9fa;
+  --dark-text: #343a40;
+}
+
+body {
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Poppins', sans-serif;
+  color: var(--dark-text);
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 1200px;
+}
+
+.card {
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  background: var(--primary);
+  color: white;
+  border-bottom: none;
+  padding: 1.5rem;
+  font-weight: 600;
+}
+
+.form-section {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.section-title i {
+  margin-right: 10px;
+  background: var(--primary);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.form-control, .form-select {
+  border-radius: 8px;
+  padding: 10px 15px;
+  border: 1px solid #dce4ec;
+  transition: all 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(26, 118, 210, 0.25);
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+.required-field::after {
+  content: "*";
+  color: red;
+  margin-left: 4px;
+}
+
+.btn-add {
+  background: var(--success);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.btn-add:hover {
+  background: #449d48;
+  transform: translateY(-2px);
+}
+
+.btn-remove {
+  color: #dc3545;
+  background: none;
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-remove:hover {
+  color: #c82333;
+  transform: scale(1.1);
+}
+
+.player-item, .trophy-item {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s;
+  border-left: 3px solid var(--primary);
+}
+
+.player-item:hover, .trophy-item:hover {
+  background-color: #f1f3f5;
+}
+
+.form-submit-btn {
+  background: var(--primary);
+  border: none;
+  padding: 12px 25px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.form-submit-btn:hover {
+  background: var(--secondary);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(13, 71, 161, 0.3);
+}
+
+.form-submit-btn:active {
+  transform: translateY(1px);
+}
+
+.logo-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 10px;
+  border: 3px solid #ddd;
+  transition: all 0.3s;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.badge-position {
+  background-color: var(--primary);
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.team-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  color: white;
+  border-radius: 0 0 30px 30px;
+}
+
+.help-text {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.nav-tabs .nav-link {
+  border-radius: 8px 8px 0 0;
+  padding: 12px 20px;
+  color: #495057;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: white;
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+}
+
+/* Animations */
+.slide-in-right {
+  animation: slideInRight 0.5s forwards;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.player-item, .trophy-item {
+  animation: fadeIn 0.6s;
+}
+
+.pulse-effect {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}

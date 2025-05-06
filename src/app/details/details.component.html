@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <!-- team-detail.component.html -->
 <div class="team-detail-container">
     <!-- Navigation Bar (same as home page) -->
@@ -22,13 +23,13 @@
     </nav>
   
     <!-- Team Header -->
-    <div *ngIf="isLoading">Chargement...</div>
-<div *ngIf="errorMessage">{{ errorMessage }}</div>
+  
 
 <!-- Utilisation de l'opérateur de navigation sécurisée -->
 <div *ngIf="team">
   <h2>{{ team?.name }}</h2>
   <p>{{ team?.country }}</p>
+  <img [src]="team?.logo" alt="Logo de l'équipe" width="150" height="150" />
   <p><strong>League:</strong> {{ team?.league }}</p>
   <p><strong>Stadium:</strong> {{ team?.stadium }}</p>
   <p><strong>Founded:</strong> {{ team?.foundedYear }}</p>
@@ -53,225 +54,6 @@
   <p>{{ team?.coach?.firstName }} {{ team?.coach?.lastName }}</p>
 </div>
 
-    
-  
-    <!-- Team Stats -->
-    <section class="team-stats">
-      <div class="stats-container">
-        <div class="stat-card">
-          <div class="stat-value">W 15</div>
-          <div class="stat-label">Victoires</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">D 5</div>
-          <div class="stat-label">Nuls</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">L 2</div>
-          <div class="stat-label">Défaites</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">57</div>
-          <div class="stat-label">Buts marqués</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">18</div>
-          <div class="stat-label">Buts encaissés</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">50</div>
-          <div class="stat-label">Points</div>
-        </div>
-      </div>
-    </section>
-  
-    <!-- Team Content Tabs -->
-    <section class="team-content">
-      <div class="team-tabs">
-        <button class="tab-button active">Aperçu</button>
-        <button class="tab-button">Effectif</button>
-        <button class="tab-button">Matchs</button>
-      </div>
-  
-      <!-- Tab Content - Aperçu -->
-      <div class="tab-content active">
-        <!-- Coach Section -->
-        <div class="coach-section">
-          <h2 class="section-title">Entraîneur</h2>
-          <div class="coach-card">
-            <div class="coach-image">
-              <img src="assets/images/coaches/xavi.jpg" alt="Xavi Hernandez">
-            </div>
-            <div class="coach-info">
-              <h3>Xavi Hernandez</h3>
-              <div class="coach-meta">
-                <span><i class="fas fa-calendar-alt"></i> 43 ans (25/01/1980)</span>
-                <span><i class="fas fa-flag"></i> Espagnol</span>
-              </div>
-              <div class="coach-stats">
-                <div class="coach-stat">
-                  <span class="stat-number">124</span>
-                  <span class="stat-label">Matchs</span>
-                </div>
-                <div class="coach-stat">
-                  <span class="stat-number">76</span>
-                  <span class="stat-label">Victoires</span>
-                </div>
-                <div class="coach-stat">
-                  <span class="stat-number">24</span>
-                  <span class="stat-label">Nuls</span>
-                </div>
-                <div class="coach-stat">
-                  <span class="stat-number">24</span>
-                  <span class="stat-label">Défaites</span>
-                </div>
-              </div>
-              <p class="coach-bio">
-                Légende du FC Barcelone en tant que joueur, Xavi Hernandez a pris les rênes de l'équipe en novembre 2021. 
-                Son style de jeu est fidèle à la philosophie du Barça, mettant l'accent sur la possession, le pressing haut et le jeu offensif. 
-                Il a remporté la Liga lors de la saison 2022-2023.
-              </p>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Key Players Section -->
-        <div class="key-players-section">
-          <h2 class="section-title">Joueurs clés</h2>
-          <div class="key-players-grid">
-            <!-- Player 1 -->
-            <div class="player-card">
-              <div class="player-card-header">
-                <div class="player-number">10</div>
-                <div class="player-position">ATT</div>
-              </div>
-              <div class="player-card-image">
-                <img src="assets/images/players/ansu-fati.jpg" alt="Ansu Fati">
-              </div>
-              <div class="player-card-info">
-                <h3>Ansu Fati</h3>
-                <div class="player-card-meta">
-                  <span><i class="fas fa-flag"></i> Espagne</span>
-                  <span><i class="fas fa-calendar-alt"></i> 21 ans</span>
-                </div>
-              </div>
-              <div class="player-card-stats">
-                <div class="player-stat">
-                  <span class="stat-value">14</span>
-                  <span class="stat-label">Buts</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">6</span>
-                  <span class="stat-label">Passes</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">22</span>
-                  <span class="stat-label">Matchs</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Player 2 -->
-            <div class="player-card">
-              <div class="player-card-header">
-                <div class="player-number">9</div>
-                <div class="player-position">ATT</div>
-              </div>
-              <div class="player-card-image">
-                <img src="assets/images/players/lewandowski.jpg" alt="Robert Lewandowski">
-              </div>
-              <div class="player-card-info">
-                <h3>Robert Lewandowski</h3>
-                <div class="player-card-meta">
-                  <span><i class="fas fa-flag"></i> Pologne</span>
-                  <span><i class="fas fa-calendar-alt"></i> 35 ans</span>
-                </div>
-              </div>
-              <div class="player-card-stats">
-                <div class="player-stat">
-                  <span class="stat-value">19</span>
-                  <span class="stat-label">Buts</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">5</span>
-                  <span class="stat-label">Passes</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">21</span>
-                  <span class="stat-label">Matchs</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Player 3 -->
-            <div class="player-card">
-              <div class="player-card-header">
-                <div class="player-number">8</div>
-                <div class="player-position">MIL</div>
-              </div>
-              <div class="player-card-image">
-                <img src="assets/images/players/pedri.jpg" alt="Pedri">
-              </div>
-              <div class="player-card-info">
-                <h3>Pedri</h3>
-                <div class="player-card-meta">
-                  <span><i class="fas fa-flag"></i> Espagne</span>
-                  <span><i class="fas fa-calendar-alt"></i> 21 ans</span>
-                </div>
-              </div>
-              <div class="player-card-stats">
-                <div class="player-stat">
-                  <span class="stat-value">7</span>
-                  <span class="stat-label">Buts</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">12</span>
-                  <span class="stat-label">Passes</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">20</span>
-                  <span class="stat-label">Matchs</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Player 4 -->
-            <div class="player-card">
-              <div class="player-card-header">
-                <div class="player-number">1</div>
-                <div class="player-position">GK</div>
-              </div>
-              <div class="player-card-image">
-                <img src="assets/images/players/ter-stegen.jpg" alt="Marc-André ter Stegen">
-              </div>
-              <div class="player-card-info">
-                <h3>Marc-André ter Stegen</h3>
-                <div class="player-card-meta">
-                  <span><i class="fas fa-flag"></i> Allemagne</span>
-                  <span><i class="fas fa-calendar-alt"></i> 31 ans</span>
-                </div>
-              </div>
-              <div class="player-card-stats">
-                <div class="player-stat">
-                  <span class="stat-value">10</span>
-                  <span class="stat-label">Clean Sheets</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">18</span>
-                  <span class="stat-label">Buts encaissés</span>
-                </div>
-                <div class="player-stat">
-                  <span class="stat-value">22</span>
-                  <span class="stat-label">Matchs</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="view-all-button">
-            <button>Voir tous les joueurs</button>
-          </div>
-        </div>
-  
         <!-- Recent Matches Section -->
         <div class="recent-matches-section">
           <h2 class="section-title">Derniers matchs</h2>
@@ -285,3 +67,9 @@
                 </div>
                 <div class="match-score">
                   <span>3 - 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>

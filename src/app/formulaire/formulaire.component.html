@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter une Équipe</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+</head>
+<body>
+  <div class="team-header text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold animate__animated animate__fadeInDown">
+        <i class="fas fa-futbol me-2"></i> Ajouter une Nouvelle Équipe
+      </h1>
+      <p class="lead animate__animated animate__fadeIn animate__delay-1s">
+        Créez et gérez votre équipe de football professionnelle
+      </p>
+    </div>
+  </div>
+
+  <div class="container main-container py-4">
+    <div class="card animate__animated animate__fadeIn animate__delay-2s">
+      <div class="card-body p-0">
+        <ul class="nav nav-tabs" id="teamFormTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-selected="true">
+              <i class="fas fa-info-circle"></i> Informations
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="players-tab" data-bs-toggle="tab" data-bs-target="#players" type="button" role="tab" aria-selected="false">
+              <i class="fas fa-users"></i> Joueurs
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="trophies-tab" data-bs-toggle="tab" data-bs-target="#trophies" type="button" role="tab" aria-selected="false">
+              <i class="fas fa-trophy"></i> Trophées
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="coach-tab" data-bs-toggle="tab" data-bs-target="#coach" type="button" role="tab" aria-selected="false">
+              <i class="fas fa-user-tie"></i> Entraîneur
+            </button>
+          </li>
+        </ul>
+
+        <form class="team-form" (ngSubmit)="onSubmit()">
+          <div class="tab-content p-4" id="teamFormTabContent">
+            <!-- Tab 1: Informations de base -->
+            <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+              <div class="form-section fade-in">
+                <h3 class="section-title">
+                  <i class="fas fa-shield-alt"></i> Informations de l'Équipe
+                </h3>
+                
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="teamName" class="form-label required-field">Nom de l'équipe</label>
+                      <input type="text" class="form-control" id="teamName" name="name" [(ngModel)]="team.name" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="country" class="form-label required-field">Pays</label>
+                      <select class="form-select" id="country" name="country" [(ngModel)]="team.country" required>
+                        <option value="" disabled selected>Sélectionner un pays</option>
+                        <option value="France">France</option>
+                        <option value="Espagne">Espagne</option>
+                        <option value="Angleterre">Angleterre</option>
+                        <option value="Allemagne">Allemagne</option>
+                        <option value="Italie">Italie</option>
+                        <option value="Portugal">Portugal</option>
+                        <option value="Brésil">Brésil</option>
+                        <option value="Argentine">Argentine</option>
+                        <option value="Pays-Bas">Pays-Bas</option>
+                        <option value="Belgique">Belgique</option>
+                        <!-- Ajoutez d'autres pays au besoin -->
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="league" class="form-label required-field">Ligue</label>
+                      <input type="text" class="form-control" id="league" name="league" [(ngModel)]="team.league" required>
+                      <div class="help-text">Ex: Ligue 1, Premier League, La Liga, etc.</div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="foundedYear" class="form-label required-field">Année de fondation</label>
+                      <input type="number" class="form-control" id="foundedYear" name="foundedYear" [(ngModel)]="team.foundedYear" min="1850" max="2025" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="stadium" class="form-label required-field">Nom du stade</label>
+                      <input type="text" class="form-control" id="stadium" name="stadium" [(ngModel)]="team.stadium" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="stadiumCapacity" class="form-label required-field">Capacité du stade</label>
+                      <input type="number" class="form-control" id="stadiumCapacity" name="stadiumCapacity" [(ngModel)]="team.stadiumCapacity" min="1000" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12">
+                    <div class="mb-3">
+                      <label for="logo" class="form-label required-field">Logo de l'équipe (URL)</label>
+                      <input type="text" class="form-control" id="logo" name="logo" [(ngModel)]="team.logo" required>
+                      <div class="mt-2">
+                        <img [src]="team.logo" class="logo-preview" *ngIf="team.logo" alt="Logo de l'équipe">
+                        <img src="/api/placeholder/100/100" class="logo-preview" *ngIf="!team.logo" alt="Logo placeholder">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-12">
+                    <div class="mb-3">
+                      <label for="description" class="form-label">Description</label>
+                      <textarea class="form-control" id="description" name="description" [(ngModel)]="team.description" rows="4"></textarea>
+                      <div class="help-text">Histoire, valeurs et informations supplémentaires sur l'équipe</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-end mt-4">
+                  <button type="button" class="btn btn-primary" (click)="nextTab('players-tab')">
+                    Suivant: Joueurs <i class="fas fa-arrow-right ms-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab 2: Joueurs -->
+            <div class="tab-pane fade" id="players" role="tabpanel" aria-labelledby="players-tab">
+              <div class="form-section fade-in">
+                <h3 class="section-title">
+                  <i class="fas fa-users"></i> Joueurs de l'Équipe
+                </h3>
+                
+                <div class="players-container">
+                  <div *ngFor="let player of team.players; let i = index" class="player-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h5 class="mb-0">
+                        Joueur #{{i+1}}
+                        <span class="badge badge-position" *ngIf="player.position">{{player.position}}</span>
+                      </h5>
+                      <button type="button" class="btn-remove" (click)="removePlayer(i)">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label required-field">Prénom</label>
+                        <input type="text" class="form-control" [(ngModel)]="player.firstName" name="player-firstName-{{i}}" required>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <label class="form-label required-field">Nom</label>
+                        <input type="text" class="form-control" [(ngModel)]="player.lastName" name="player-lastName-{{i}}" required>
+                      </div>
+                      
+                      <div class="col-md-4">
+                        <label class="form-label required-field">Âge</label>
+                        <input type="number" class="form-control" [(ngModel)]="player.age" name="player-age-{{i}}" min="16" max="50" required>
+                      </div>
+                      
+                      <div class="col-md-4">
+                        <label class="form-label required-field">Numéro</label>
+                        <input type="number" class="form-control" [(ngModel)]="player.number" name="player-number-{{i}}" min="1" max="99" required>
+                      </div>
+                      
+                      <div class="col-md-4">
+                        <label class="form-label required-field">Position</label>
+                        <select class="form-select" [(ngModel)]="player.position" name="player-position-{{i}}" required>
+                          <option value="" disabled selected>Sélectionner</option>
+                          <option value="Gardien">Gardien</option>
+                          <option value="Défenseur">Défenseur</option>
+                          <option value="Milieu">Milieu</option>
+                          <option value="Attaquant">Attaquant</option>
+                        </select>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <label class="form-label required-field">Nationalité</label>
+                        <input type="text" class="form-control" [(ngModel)]="player.nationality" name="player-nationality-{{i}}" required>
+                      </div>
+                      
+                      <div class="col-md-6">
+                        <label class="form-label required-field">Image (URL)</label>
+                        <input type="text" class="form-control" [(ngModel)]="player.image" name="player-image-{{i}}" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="text-center mt-4" *ngIf="team.players.length === 0">
+                  <p class="text-muted">Aucun joueur ajouté</p>
+                </div>
+                
+                <div class="d-flex justify-content-center mt-4">
+                  <button type="button" class="btn btn-add pulse-effect" (click)="addPlayer()">
+                    <i class="fas fa-plus me-2"></i> Ajouter un joueur
+                  </button>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary" (click)="previousTab('info-tab')">
+                    <i class="fas fa-arrow-left me-2"></i> Précédent
+                  </button>
+                  <button type="button" class="btn btn-primary" (click)="nextTab('trophies-tab')">
+                    Suivant: Trophées <i class="fas fa-arrow-right ms-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab 3: Trophées -->
+            <div class="tab-pane fade" id="trophies" role="tabpanel" aria-labelledby="trophies-tab">
+              <div class="form-section fade-in">
+                <h3 class="section-title">
+                  <i class="fas fa-trophy"></i> Trophées Remportés
+                </h3>
+                
+                <div class="trophies-container">
+                  <div *ngFor="let trophy of team.trophies; let i = index" class="trophy-item mb-4 slide-in-right" [style.animation-delay]="i * 0.1 + 's'">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h5 class="mb-0">Trophée #{{i+1}}</h5>
+                      <button type="button" class="btn-remove" (click)="removeTrophy(i)">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    
+                    <div class="row g-3">
+                      <div class="col-md-8">
+                        <label class="form-label required-field">Nom du trophée</label>
+                        <input type="text" class="form-control" [(ngModel)]="trophy.name" name="trophy-name-{{i}}" required>
+                      </div>
+                      
+                      <div class="col-md-4">
+                        <label class="form-label required-field">Année</label>
+                        <input type="number" class="form-control" [(ngModel)]="trophy.year" name="trophy-year-{{i}}" min="1850" max="2025" required>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="text-center mt-4" *ngIf="team.trophies.length === 0">
+                  <p class="text-muted">Aucun trophée ajouté</p>
+                </div>
+                
+                <div class="d-flex justify-content-center mt-4">
+                  <button type="button" class="btn btn-add pulse-effect" (click)="addTrophy()">
+                    <i class="fas fa-plus me-2"></i> Ajouter un trophée
+                  </button>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary" (click)="previousTab('players-tab')">
+                    <i class="fas fa-arrow-left me-2"></i> Précédent
+                  </button>
+                  <button type="button" class="btn btn-primary" (click)="nextTab('coach-tab')">
+                    Suivant: Entraîneur <i class="fas fa-arrow-right ms-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Tab 4: Entraîneur -->
+            <div class="tab-pane fade" id="coach" role="tabpanel" aria-labelledby="coach-tab">
+              <div class="form-section fade-in">
+                <h3 class="section-title">
+                  <i class="fas fa-user-tie"></i> Entraîneur
+                </h3>
+                
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="coachFirstName" class="form-label required-field">Prénom</label>
+                      <input type="text" class="form-control" id="coachFirstName" name="coachFirstName" [(ngModel)]="team.coach.firstName" required>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="coachLastName" class="form-label required-field">Nom</label>
+                      <input type="text" class="form-control" id="coachLastName" name="coachLastName" [(ngModel)]="team.coach.lastName" required>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-outline-secondary" (click)="previousTab('trophies-tab')">
+                    <i class="fas fa-arrow-left me-2"></i> Précédent
+                  </button>
+                  <button type="submit" class="btn form-submit-btn animate__animated animate__pulse animate__infinite">
+                    <i class="fas fa-check-circle me-2"></i> Enregistrer l'équipe
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
