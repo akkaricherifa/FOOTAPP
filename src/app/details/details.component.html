@@ -1,75 +1,103 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- team-detail.component.html -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 <div class="team-detail-container">
-    <!-- Navigation Bar (same as home page) -->
-    <nav class="navbar">
-      <div class="navbar-container">
-        <div class="navbar-logo">
-          <img src="assets/images/logo1.png" alt="Football Manager Logo">
-          <span>Football Teams Manager</span>
-        </div>
-        <div class="navbar-links">
-            <a href="/home">Accueil</a>
-          <a href="#" class="active">Équipes</a>
-          <a href="#">Compétitions</a>
-          <a href="#">Classements</a>
-          <a href="#">Actualités</a>
-        </div>
-        <div class="navbar-search">
-          <input type="text" placeholder="Rechercher un joueur...">
-          <button><i class="fas fa-search"></i></button>
-        </div>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <img src="assets/images/logo1.png" alt="Football Manager Logo">
+        <span>Football Teams Manager</span>
       </div>
-    </nav>
-  
-    <!-- Team Header -->
-  
+      <div class="navbar-links">
+        <a href="/home">Accueil</a>
+        <a href="#" class="active">Équipes</a>
+        <a href="#">Compétitions</a>
+        <a href="#">Classements</a>
+        <a href="#">Actualités</a>
+      </div>
+      <div class="navbar-search">
+        <input type="text" placeholder="Rechercher un joueur...">
+        <button><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+  </nav>
 
-<!-- Utilisation de l'opérateur de navigation sécurisée -->
-<div *ngIf="team">
-  <h2>{{ team?.name }}</h2>
-  <p>{{ team?.country }}</p>
-  <img [src]="team?.logo" alt="Logo de l'équipe" width="150" height="150" />
-  <p><strong>League:</strong> {{ team?.league }}</p>
-  <p><strong>Stadium:</strong> {{ team?.stadium }}</p>
-  <p><strong>Founded:</strong> {{ team?.foundedYear }}</p>
-  <p><strong>Stadium Capacity:</strong> {{ team?.stadiumCapacity }}</p>
-  <p><strong>Description:</strong> {{ team?.description || 'No description available' }}</p>
-  
-  <h3>Players</h3>
-  <ul>
-    <li *ngFor="let player of team?.players">
-      {{ player.firstName }} {{ player.lastName }} - {{ player.position }} ({{ player.number }})
-    </li>
-  </ul>
+  <!-- Team Card -->
+  <div *ngIf="team" class="team-card">
+    <div class="team-header">
+      <img [src]="team?.logo" alt="Logo de l'équipe" class="team-logo" />
+      <div class="team-basic-info">
+        <h2>{{ team?.name }}</h2>
+        <p class="country">{{ team?.country }}</p>
+      </div>
+    </div>
 
-  <h3>Trophies</h3>
-  <ul>
-    <li *ngFor="let trophy of team?.trophies">
-      {{ trophy.name }} - {{ trophy.year }}
-    </li>
-  </ul>
+    <div class="team-info-grid">
+      <div class="info-item">
+        <h4>🏆 League</h4>
+        <p>{{ team?.league }}</p>
+      </div>
+      <div class="info-item">
+        <h4>🏟️ Stadium</h4>
+        <p>{{ team?.stadium }}</p>
+      </div>
+      <div class="info-item">
+        <h4>📅 Founded</h4>
+        <p>{{ team?.foundedYear }}</p>
+      </div>
+      <div class="info-item">
+        <h4>👥 Capacity</h4>
+        <p>{{ team?.stadiumCapacity }}</p>
+      </div>
+    </div>
 
-  <h3>Coach</h3>
-  <p>{{ team?.coach?.firstName }} {{ team?.coach?.lastName }}</p>
-</div>
+    <div class="description-section">
+      <h3>📝 Description</h3>
+      <p>{{ team?.description || 'No description available' }}</p>
+    </div>
 
-        <!-- Recent Matches Section -->
-        <div class="recent-matches-section">
-          <h2 class="section-title">Derniers matchs</h2>
-          <div class="matches-list">
-            <div class="match-card match-win">
-              <div class="match-date">15 Mai 2025</div>
-              <div class="match-teams">
-                <div class="team home">
-                  <img src="assets/images/teams/barcelona.png" alt="Barcelona">
-                  <span>Barcelona</span>
-                </div>
-                <div class="match-score">
-                  <span>3 - 1</span>
-                </div>
-              </div>
-            </div>
+    <div class="team-section">
+      <h3>👕 Players</h3>
+      <ul>
+        <li *ngFor="let player of team?.players">
+          <span class="player-name">{{ player.firstName }} {{ player.lastName }}</span> 
+          — <span class="player-info">{{ player.position }} (#{{ player.number }})</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="team-section">
+      <h3>🏅 Trophies</h3>
+      <ul>
+        <li *ngFor="let trophy of team?.trophies">
+          {{ trophy.name }} - {{ trophy.year }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="team-section">
+      <h3>👨‍🏫 Coach</h3>
+      <p>{{ team?.coach?.firstName }} {{ team?.coach?.lastName }}</p>
+    </div>
+  </div>
+
+  <!-- Recent Matches -->
+  <div class="recent-matches-section">
+    <h2 class="section-title">Derniers matchs</h2>
+    <div class="matches-list">
+      <div class="match-card match-win">
+        <div class="match-date">15 Mai 2025</div>
+        <div class="match-teams">
+          <div class="team home">
+            <img src="assets/images/teams/barcelona.png" alt="Barcelona">
+            <span>Barcelona</span>
+          </div>
+          <div class="match-score">
+            <span>3 - 1</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 </div>
