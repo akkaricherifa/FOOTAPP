@@ -1,9 +1,10 @@
 // formulaire.component.ts
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TeamServiceService } from '../team-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Team } from '../models/team';
 
 @Component({
   selector: 'app-formulaire',
@@ -35,26 +36,22 @@ export class FormulaireComponent {
     private fb: FormBuilder,
     private teamService: TeamServiceService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.teamForm = this.createForm();
   }
 
-  ngOnInit(): void {
-
-  
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id && id !== 'new') {
-      this.loadTeam(id);
-    } else {
-      this.addPlayer(); // Ajouter un joueur par défaut pour les nouvelles équipes
-    }
-
-    if (!this.team) {
-      this.team = { Tab: 0 };
-    }
-    this.addTrophy(); 
+ngOnInit(): void {
+  const id = this.route.snapshot.paramMap.get('id');
+  if (id && id !== 'new') {
+    this.loadTeam(id);
+  } else {
+    this.addPlayer();
+    this.addTrophy();
   }
+}
+
 
   createForm(): FormGroup {
     return this.fb.group({
@@ -92,30 +89,53 @@ export class FormulaireComponent {
   }
 
  // Dans createPlayer(), assurez-vous que tous les champs requis sont valides
- createPlayer(): FormGroup {
+createPlayer(): FormGroup {
   return this.fb.group({
     firstName: ['', [
       Validators.required,
       Validators.minLength(2),
-      Validators.pattern('[a-zA-Z ]*')
+      Validators.pattern(/^[a-zA-ZÀ-ÿ- ]+$/) // Accepte accents et espaces
     ]],
     lastName: ['', [
       Validators.required,
       Validators.minLength(2),
-      Validators.pattern('[a-zA-Z ]*')
+      Validators.pattern(/^[a-zA-ZÀ-ÿ- ]+$/)
+    ]],
+    age: [null, [
+      Validators.required,
+      Validators.min(16),
+      Validators.max(50)
+    ]],
+    number: [null, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(99)
     ]],
     position: ['', Validators.required],
     nationality: ['', [
       Validators.required,
-      Validators.pattern('[a-zA-Z ]*')
+      Validators.pattern(/^[a-zA-ZÀ-ÿ- ]+$/)
     ]],
     image: ['', [
       Validators.required,
-      Validators.pattern('https?://.+\.(jpg|jpeg|png|gif)')
-    ]],
-    // ... autres champs
+      Validators.pattern(/https?:\/\/.+\.(jpg|jpeg|png|gif)/i)
+    ]]
   });
 }
+
+
+
+updateFormValidity(): void {
+  this.players.controls.forEach(player => {
+    player.updateValueAndValidity({ emitEvent: true });
+  });
+  this.teamForm.updateValueAndValidity();
+}
+
+
+
+
+
 
 createTrophy(): FormGroup {
   return this.fb.group({
@@ -132,9 +152,16 @@ createTrophy(): FormGroup {
   });
 }
 
-  addPlayer(): void {
-    this.players.push(this.createPlayer());
-  }
+addPlayer(): void {
+  const newPlayer = this.createPlayer();
+  this.players.push(newPlayer);
+  
+  // Force la détection des changements
+  setTimeout(() => {
+    this.updateFormValidity();
+    this.cdr.detectChanges();
+  });
+}
 
   removePlayer(index: number): void {
     this.players.removeAt(index);
@@ -151,7 +178,7 @@ createTrophy(): FormGroup {
   loadTeam(id: string): void {
     this.isLoading = true;
     this.teamService.getTeamById(id).subscribe({
-      next: (team) => {
+      next: (team: Team) =>  {
         // Remplir le formulaire avec les données de l'équipe
         this.teamForm.patchValue({
           _id: team._id,
@@ -204,13 +231,46 @@ createTrophy(): FormGroup {
     }
 }
 onSubmit(): void {
+  this.submitted = true;
   this.markAllAsTouched(this.teamForm);
   
   if (this.teamForm.invalid) {
     this.showFieldErrors();
     return;
   }
-  // ... reste de la soumission
+
+  this.isLoading = true;
+  const teamData = this.teamForm.value;
+
+  if (teamData._id) {
+    // Mise à jour d'une équipe existante
+    this.teamService.updateTeam(teamData._id, teamData).subscribe({
+      next: () => {
+        this.successMessage = 'Équipe mise à jour avec succès';
+        this.isLoading = false;
+        setTimeout(() => this.router.navigate(['/teams']), 2000);
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors de la mise à jour de l\'équipe';
+        this.isLoading = false;
+        console.error(err);
+      }
+    });
+  } else {
+    // Création d'une nouvelle équipe
+    this.teamService.addTeam(teamData).subscribe({
+      next: () => {
+        this.successMessage = 'Équipe créée avec succès';
+        this.isLoading = false;
+        setTimeout(() => this.router.navigate(['/teams']), 2000);
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors de la création de l\'équipe';
+        this.isLoading = false;
+        console.error(err);
+      }
+    });
+  }
 }
 
 private showFieldErrors(): void {
@@ -307,23 +367,78 @@ private getInvalidFields(): string[] {
     }
   }
 
-  private validateCurrentTab(): boolean {
-    if (this.currentTab === 'info-tab') {
+private validateCurrentTab(): boolean {
+  let isValid = true;
+  this.errorMessage = '';
+
+  switch (this.currentTab) {
+    case 'info-tab':
       const infoControls = ['name', 'country', 'league', 'foundedYear', 'stadium', 'stadiumCapacity', 'logo'];
-      let isValid = true;
-      
       infoControls.forEach(control => {
         if (this.teamForm.get(control)?.invalid) {
           this.teamForm.get(control)?.markAsTouched();
           isValid = false;
         }
       });
-      
-      if (!isValid) {
-        this.errorMessage = 'Veuillez remplir tous les champs obligatoires';
-        return false;
+      break;
+
+    case 'players-tab':
+      if (this.players.length === 0) {
+        this.errorMessage = 'Veuillez ajouter au moins un joueur';
+        isValid = false;
+      } else {
+        this.players.controls.forEach(player => {
+          if (player.invalid) {
+            this.markAllAsTouched(player);
+            isValid = false;
+          }
+        });
       }
-    }
-    return true;
+      break;
+
+    case 'trophies-tab':
+      // Les trophées sont optionnels donc pas de validation stricte
+      this.trophies.controls.forEach(trophy => {
+        if (trophy.invalid) {
+          this.markAllAsTouched(trophy);
+          isValid = false;
+        }
+      });
+      break;
+
+    case 'coach-tab':
+      const coachControls = ['firstName', 'lastName'];
+      coachControls.forEach(control => {
+        if (this.teamForm.get(`coach.${control}`)?.invalid) {
+          this.teamForm.get(`coach.${control}`)?.markAsTouched();
+          isValid = false;
+        }
+      });
+      break;
   }
+
+  if (!isValid) {
+    this.errorMessage = this.errorMessage || 'Veuillez corriger les erreurs avant de continuer';
+  }
+
+  return isValid;
+}
+
+logFormErrors(): void {
+  console.group('Form Errors');
+  console.log('Form valid:', this.teamForm.valid);
+  console.log('Form errors:', this.teamForm.errors);
+  
+  console.group('Players Errors');
+  this.players.controls.forEach((player, index) => {
+    console.log(`Player ${index + 1}:`, {
+      valid: player.valid,
+      errors: player.errors,
+      value: player.value
+    });
+  });
+  console.groupEnd();
+  
+  console.groupEnd();
+}
 }
