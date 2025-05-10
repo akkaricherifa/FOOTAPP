@@ -62,20 +62,25 @@ export class DetailsComponent implements OnInit {
 
   
   // Méthode pour supprimer une équipe
-  deleteTeam(): void {
-    if (confirm('Voulez-vous vraiment supprimer cette équipe ?')) {
-      this.teamService.deleteTeam(this.teamId).subscribe({
-        next: () => {
-          alert('L\'équipe a été supprimée');
-          this.location.back(); // Revenir à la page précédente
-        },
-        error: (err) => {
-          this.errorMessage = 'Erreur lors de la suppression de l\'équipe';
-          console.error('Erreur:', err);
-        },
-      });
-    }
+deleteTeam(): void {
+  const teamId = this.route.snapshot.paramMap.get('id');  // Récupère l'ID de l'URL
+  console.log('teamId pour suppression:', teamId);  // Vérifiez que l'ID est récupéré
+  if (teamId && confirm('Voulez-vous vraiment supprimer cette équipe ?')) {
+    this.teamService.deleteTeam(teamId).subscribe({
+      next: () => {
+        alert('L\'équipe a été supprimée');
+        this.location.back(); // Revenir à la page précédente
+      },
+      error: (err) => {
+        this.errorMessage = 'Erreur lors de la suppression de l\'équipe';
+        console.error('Erreur:', err);
+      },
+    });
+  } else {
+    console.error('ID de l\'équipe manquant pour la suppression');
   }
+}
+
 
   // Méthode pour revenir à la page précédente
   goBack(): void {

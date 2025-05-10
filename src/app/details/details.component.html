@@ -23,6 +23,7 @@
     </div>
   </nav>
 
+
   <!-- Team Card -->
   <div *ngIf="team" class="team-card">
     <div class="team-header">
@@ -31,7 +32,16 @@
         <h2>{{ team?.name }}</h2>
         <p class="country">{{ team?.country }}</p>
       </div>
+ <div style="margin-left: 400px">
+  <button class="delete-button" type="button" (click)="deleteTeam()">
+    🗑️ Supprimer l'équipe
+  </button>
+</div>
+  
+
     </div>
+
+
 
     <div class="team-info-grid">
       <div class="info-item">

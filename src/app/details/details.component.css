@@ -207,3 +207,31 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+.delete-button {
+  background-color: #e74c3c; /* rouge vif */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 150; /* PAS de marge gauche */
+  margin-top: 20px; /* petite marge au-dessus pour respirer */
+}
+
+
+.delete-button:hover {
+  background-color: #c0392b; /* rouge un peu plus foncé au survol */
+  transform: scale(1.05);
+}
+
+.delete-button:active {
+  transform: scale(0.98);
+}
