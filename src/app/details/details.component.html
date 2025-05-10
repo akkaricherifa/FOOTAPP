@@ -59,10 +59,15 @@
 
     <div class="team-section">
       <h3>👕 Players</h3>
+      
       <ul>
         <li *ngFor="let player of team?.players">
-          <span class="player-name">{{ player.firstName }} {{ player.lastName }}</span> 
-          — <span class="player-info">{{ player.position }} (#{{ player.number }})</span>
+              <img [src]="player?.image" class="team-logo" />
+          <span class="player-name">{{ player.firstName }} {{ player.lastName }} </span> 
+         <br> 
+         <br>
+          <span class="player-info"> Position : {{ player.position }}
+            <br> Numéro : ({{ player.number }})</span> 
         </li>
       </ul>
     </div>

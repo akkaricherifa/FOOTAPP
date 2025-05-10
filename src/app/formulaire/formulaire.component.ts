@@ -1,6 +1,6 @@
 // formulaire.component.ts
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TeamServiceService } from '../team-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./formulaire.component.css']
 })
 export class FormulaireComponent {
+  @ViewChild('tabContent') tabContent!: ElementRef;
+   activeTab: string = 'info'; // Gère l'onglet actif
+
   teamForm: FormGroup;
   isLoading = false;
   errorMessage = '';
@@ -38,6 +41,8 @@ export class FormulaireComponent {
   }
 
   ngOnInit(): void {
+
+  
     const id = this.route.snapshot.paramMap.get('id');
     if (id && id !== 'new') {
       this.loadTeam(id);
@@ -48,6 +53,7 @@ export class FormulaireComponent {
     if (!this.team) {
       this.team = { Tab: 0 };
     }
+    this.addTrophy(); 
   }
 
   createForm(): FormGroup {
@@ -85,32 +91,46 @@ export class FormulaireComponent {
     return this.teamForm.get('trophies') as FormArray;
   }
 
-  createPlayer(): FormGroup {
-    return this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      age: [25, [Validators.required, Validators.min(16), Validators.max(50)]],
-      position: ['', Validators.required],
-      number: [this.players.length + 1, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(99)
-      ]],
-      nationality: ['', Validators.required],
-      image: ['', Validators.required]
-    });
-  }
+ // Dans createPlayer(), assurez-vous que tous les champs requis sont valides
+ createPlayer(): FormGroup {
+  return this.fb.group({
+    firstName: ['', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.pattern('[a-zA-Z ]*')
+    ]],
+    lastName: ['', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.pattern('[a-zA-Z ]*')
+    ]],
+    position: ['', Validators.required],
+    nationality: ['', [
+      Validators.required,
+      Validators.pattern('[a-zA-Z ]*')
+    ]],
+    image: ['', [
+      Validators.required,
+      Validators.pattern('https?://.+\.(jpg|jpeg|png|gif)')
+    ]],
+    // ... autres champs
+  });
+}
 
-  createTrophy(): FormGroup {
-    return this.fb.group({
-      name: ['', Validators.required],
-      year: [new Date().getFullYear(), [
-        Validators.required,
-        Validators.min(1850),
-        Validators.max(new Date().getFullYear())
-      ]]
-    });
-  }
+createTrophy(): FormGroup {
+  return this.fb.group({
+    name: ['', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(50)
+    ]],
+    year: [new Date().getFullYear(), [
+      Validators.required,
+      Validators.min(1850),
+      Validators.max(new Date().getFullYear())
+    ]]
+  });
+}
 
   addPlayer(): void {
     this.players.push(this.createPlayer());
@@ -172,53 +192,138 @@ export class FormulaireComponent {
     });
   }
 
-  onSubmit(): void {
-    this.submitted = true;
+
+
+  private markAllAsTouched(control: AbstractControl): void {
+    control.markAsTouched();
     
-    if (this.teamForm.invalid) {
-      this.errorMessage = 'Veuillez remplir tous les champs obligatoires';
-      return;
+    if (control instanceof FormGroup || control instanceof FormArray) {
+        Object.values(control.controls).forEach(childControl => {
+            this.markAllAsTouched(childControl);
+        });
     }
-
-    if (this.players.length === 0) {
-      this.errorMessage = 'Veuillez ajouter au moins un joueur';
-      return;
-    }
-
-    this.isLoading = true;
-    const teamData = this.teamForm.value;
-
-    const observable = teamData._id 
-      ? this.teamService.updateTeam(teamData._id, teamData)
-      : this.teamService.addTeam(teamData);
-
-    observable.subscribe({
-      next: () => {
-        this.successMessage = teamData._id 
-          ? 'Équipe mise à jour avec succès!' 
-          : 'Équipe créée avec succès!';
-        this.isLoading = false;
-        
-        setTimeout(() => {
-          this.router.navigate(['/teams']);
-        }, 2000);
-      },
-      error: (err) => {
-        this.errorMessage = 'Une erreur est survenue';
-        this.isLoading = false;
-        console.error(err);
-      }
-    });
+}
+onSubmit(): void {
+  this.markAllAsTouched(this.teamForm);
+  
+  if (this.teamForm.invalid) {
+    this.showFieldErrors();
+    return;
   }
+  // ... reste de la soumission
+}
+
+private showFieldErrors(): void {
+  // Joueurs
+  this.players.controls.forEach((player, index) => {
+    if (player.invalid) {
+      const errors = this.getControlErrors(player);
+      console.error(`Erreurs joueur ${index + 1}:`, errors);
+    }
+  });
+
+  // Trophées
+  this.trophies.controls.forEach((trophy, index) => {
+    if (trophy.invalid) {
+      const errors = this.getControlErrors(trophy);
+      console.error(`Erreurs trophée ${index + 1}:`, errors);
+    }
+  });
+
+  this.errorMessage = 'Veuillez corriger les erreurs marquées en rouge';
+}
+
+private getControlErrors(control: AbstractControl): any {
+  return control instanceof FormGroup 
+    ? Object.fromEntries(
+        Object.entries(control.controls)
+          .filter(([_, c]) => c.invalid)
+          .map(([key, c]) => [key, c.errors])
+      )
+    : control.errors;
+}
+
+// Méthode pour marquer tous les contrôles comme "touched"
+
+
+// Méthode pour récupérer toutes les erreurs
+private getFormErrors(formGroup: FormGroup | FormArray): any {
+    const errors: any = {};
+    
+    Object.keys(formGroup.controls).forEach(key => {
+        const control = formGroup.get(key);
+        
+        if (control instanceof FormGroup || control instanceof FormArray) {
+            errors[key] = this.getFormErrors(control);
+        } else if (control?.errors) {
+            errors[key] = control.errors;
+        }
+    });
+    
+    return Object.keys(errors).length ? errors : null;
+}
+
+private getInvalidFields(): string[] {
+    const invalid = [];
+    const controls = this.teamForm.controls;
+    for (const name in controls) {
+        if (controls[name].invalid) {
+            invalid.push(name);
+        }
+    }
+    return invalid;
+}
 
   
   nextTab(tabId: string) {
-    console.log("Onglet demandé :", tabId);
-    this.currentTab = tabId; // mise à jour de l'onglet courant
+    if (this.validateCurrentTab()) {
+      this.switchTab(tabId);
+    }
   }
-  
 
   previousTab(tabId: string): void {
-    this.nextTab(tabId);
+    this.switchTab(tabId);
+  }
+
+  private switchTab(tabId: string): void {
+    // Trouver l'élément du tab et le bouton correspondant
+    const tabPaneId = tabId.replace('-tab', '');
+    const tabPane = document.getElementById(tabPaneId);
+    const tabButton = document.getElementById(tabId);
+    
+    if (tabPane && tabButton) {
+      // Retirer les classes actives de tous les onglets
+      document.querySelectorAll('.tab-pane').forEach(el => {
+        el.classList.remove('active', 'show');
+      });
+      document.querySelectorAll('.nav-link').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Activer le nouvel onglet
+      tabPane.classList.add('active', 'show');
+      tabButton.classList.add('active');
+      this.currentTab = tabId;
+    }
+  }
+
+  private validateCurrentTab(): boolean {
+    if (this.currentTab === 'info-tab') {
+      const infoControls = ['name', 'country', 'league', 'foundedYear', 'stadium', 'stadiumCapacity', 'logo'];
+      let isValid = true;
+      
+      infoControls.forEach(control => {
+        if (this.teamForm.get(control)?.invalid) {
+          this.teamForm.get(control)?.markAsTouched();
+          isValid = false;
+        }
+      });
+      
+      if (!isValid) {
+        this.errorMessage = 'Veuillez remplir tous les champs obligatoires';
+        return false;
+      }
+    }
+    return true;
   }
 }

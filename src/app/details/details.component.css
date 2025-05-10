@@ -74,8 +74,8 @@ body {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px;
-  border: 3px solid #00b4d8;
+  margin-right: 50px;
+  border: 3px solid #070707;
 }
 .team-basic-info h2 {
   margin: 0;
